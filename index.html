@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecteur de Playlist Dynamique</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Choisissez votre Playlist</h1>
+        <a href="URL_DU_BOUTON_COMPLEMENTAIRE" id="complement-btn">Ajouter un lien complémentaire</a>
+    </header>
+    
+    <div id="controls">
+        <button onclick="chargerPlaylist('PLIQjKfP2nq7llaxYJk4UGpcIa1ABgL6kC')">Playlist A</button>
+        <button onclick="chargerPlaylist('PLWxxUYrdoTMbatSjb-sUiEBOPxfT8PfMt')">Playlist B</button>
+        </div>
+
+    <iframe 
+        id="lecteurYoutube" 
+        width="100%" 
+        height="450px" 
+        src="" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        allowfullscreen>
+    </iframe>
+
+    <script src="script.js"></script>
+</body>
+</html>
