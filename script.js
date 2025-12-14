@@ -1,59 +1,70 @@
 // Fonction pour lire le fichier JSON et générer les boutons sur index.html
 function generatePlaylistButtons() {
     fetch('playlists.json')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur HTTP: ' + response.status);
+            }
+            return response.json();
+        })
         .then(playlists => {
             const controlsDiv = document.getElementById('controls');
-            controlsDiv.innerHTML = ''; // Nettoie le message de chargement
+            controlsDiv.innerHTML = ''; 
 
             playlists.forEach(playlist => {
-                // Créer le lien vers la page du lecteur
                 const link = document.createElement('a');
-                // Le lien passe l'ID de la playlist à la page player.html
-                link.href = `player.html?list=${playlist.id}`;
+                // MODIFICATION : On passe l'ID ET le type dans l'URL !
+                link.href = `player.html?id=${playlist.id}&type=${playlist.type}`;
                 
-                // Créer le bouton
                 const button = document.createElement('button');
                 button.textContent = playlist.name;
 
-                // Assembler le tout
                 link.appendChild(button);
                 controlsDiv.appendChild(link);
             });
         })
         .catch(error => {
             console.error('Erreur de chargement des playlists:', error);
-            document.getElementById('controls').innerHTML = '<p style="color:red;">Erreur lors du chargement des playlists.</p>';
+            document.getElementById('controls').innerHTML = '<p style="color:red;">Erreur lors du chargement des playlists. (Voir console)</p>';
         });
 }
 
-// Logique pour la page du lecteur (inchangée)
+// Logique pour la page du lecteur
 function loadPlayer() {
     const iframe = document.getElementById('lecteurYoutube');
     
-    // 1. Récupère l'ID de la playlist de l'URL
+    // 1. Récupère les paramètres de l'URL
     const urlParams = new URLSearchParams(window.location.search);
-    const playlistId = urlParams.get('list');
+    const id = urlParams.get('id'); // Notez que nous récupérons 'id' au lieu de 'list'
+    const type = urlParams.get('type');
+
+    let nouvelleSrc = '';
     
-    if (playlistId) {
-        // 2. Construit l'URL avec l'ID et active le mode SHUFFLE (&shuffle=1)
-        const nouvelleSrc = `https://www.youtube.com/embed/videoseries?list=${playlistId}&shuffle=1`;
+    if (id && type) {
+        if (type === 'playlist') {
+            // C'est une PLAYLIST : on utilise 'videoseries?list=' et on ajoute le shuffle
+            nouvelleSrc = `https://www.youtube.com/embed/videoseries?list=${id}&shuffle=1`;
+        } else if (type === 'video') {
+            // C'est une VIDEO UNIQUE (Radio) : on utilise 'embed/' et on ajoute la boucle
+            // 'autoplay=1' lance la lecture. 'loop=1' met en boucle.
+            nouvelleSrc = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}`;
+        }
+        
+        // Applique l'URL construite
         iframe.src = nouvelleSrc;
+
     } else {
         iframe.style.display = 'none';
-        // Redirige vers l'accueil si l'ID est manquant
-        alert("Erreur : Aucune playlist spécifiée. Retour à l'accueil.");
+        alert("Erreur : Contenu non spécifié. Retour à l'accueil.");
         window.location.href = 'index.html'; 
     }
 }
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Si la page a l'ID 'controls', nous sommes sur l'accueil
     if (document.getElementById('controls')) {
         generatePlaylistButtons();
     }
-    // Si la page a l'ID 'lecteurYoutube', nous sommes sur la page du lecteur
     if (document.getElementById('lecteurYoutube')) {
         loadPlayer();
     }
