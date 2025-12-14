@@ -14,16 +14,8 @@
         "name": "The Pretty Reckless",
         "type": "playlist"
     },
-    {
-        "id": "PL3IHEFyypHXGMd06Vnftzq9Zm1EuNXwHg",
-        "name": "The Warning",
-        "type": "playlist"
-    },
-    {
-        "id": "PLbLj9uC6CTIoCvA4fN32Wo2sFhcmNWrR2",
-        "name": "Aldebert",
-        "type": "playlist"
-    },
+    {"id": "PL3IHEFyypHXGMd06Vnftzq9Zm1EuNXwHg","name": "The Warning","type": "playlist"},
+    {"id": "PLbLj9uC6CTIoCvA4fN32Wo2sFhcmNWrR2","name": "Aldebert","type": "playlist"},
     {
         "id": "PLAAE66433681598F2",
         "name": "Red Hot Chili Peppers",
