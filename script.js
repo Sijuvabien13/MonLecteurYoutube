@@ -120,5 +120,19 @@ document.addEventListener('DOMContentLoaded', () => {
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     }
+
+    // Gestion du bouton "Suivant"
+    const nextBtn = document.getElementById('next-btn');
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            // On vérifie que le lecteur est bien chargé et prêt
+            if (player && typeof player.nextVideo === 'function') {
+                player.nextVideo();
+            } else {
+                console.log("Le lecteur n'est pas encore prêt.");
+            }
+        });
+    }
+    
 });
                     
