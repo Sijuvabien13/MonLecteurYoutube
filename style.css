@@ -28,3 +28,31 @@ header {
     color: #007bff;
     text-decoration: none;
 }
+/* Style pour la zone de commande */
+#player-controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Style du gros bouton Suivant */
+#next-btn {
+    background-color: #ff0000; /* Rouge YouTube */
+    color: white;
+    font-size: 1.2rem; /* Texte bien gros */
+    font-weight: bold;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px; /* Bords bien arrondis */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* Petite ombre */
+    transition: transform 0.1s; /* Animation au clic */
+    width: 90%; /* Prend presque toute la largeur sur mobile */
+    max-width: 400px; /* Mais pas trop large sur PC */
+}
+
+/* Effet quand on clique dessus */
+#next-btn:active {
+    transform: scale(0.95);
+    background-color: #cc0000;
+}
+
