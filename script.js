@@ -32,30 +32,20 @@ function generatePlaylistButtons() {
 // Logique pour la page du lecteur
 function loadPlayer() {
     const iframe = document.getElementById('lecteurYoutube');
-    
-    // 1. Récupère les paramètres de l'URL
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id'); // Notez que nous récupérons 'id' au lieu de 'list'
+    const id = urlParams.get('id');
     const type = urlParams.get('type');
 
-    let nouvelleSrc = '';
-    
     if (id && type) {
         if (type === 'playlist') {
-            // C'est une PLAYLIST : on utilise 'videoseries?list=' et on ajoute le shuffle
-            nouvelleSrc = `https://www.youtube.com/embed/videoseries?list=${id}&shuffle=1`;
+            // ASTUCE : On ajoute &index=1 (ou un chiffre au hasard) et on s'assure que le shuffle est activé
+            // Note: YouTube est capricieux, l'ajout de autoplay=1 aide souvent à valider le shuffle
+            iframe.src = `https://www.youtube.com/embed/videoseries?list=${id}&shuffle=1&autoplay=1`;
         } else if (type === 'video') {
-            // C'est une VIDEO UNIQUE (Radio) : on utilise 'embed/' et on ajoute la boucle
-            // 'autoplay=1' lance la lecture. 'loop=1' met en boucle.
-            nouvelleSrc = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}`;
+            iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}`;
         }
-        
-        // Applique l'URL construite
-        iframe.src = nouvelleSrc;
-
     } else {
         iframe.style.display = 'none';
-        alert("Erreur : Contenu non spécifié. Retour à l'accueil.");
         window.location.href = 'index.html'; 
     }
 }
