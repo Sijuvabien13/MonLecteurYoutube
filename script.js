@@ -104,6 +104,45 @@ function onPlayerReady(event) {
     }
 }
 
+// Fonction pour mettre à jour l'écran de verrouillage (Media Session API)
+function updateMediaSession() {
+    if ('mediaSession' in navigator && player) {
+        
+        // 1. On récupère les infos de la vidéo en cours
+        // Note: getVideoData() est une fonction de l'API YouTube
+        const videoData = player.getVideoData(); 
+        const title = videoData ? videoData.title : "Lecture en cours";
+        const author = videoData ? videoData.author : "Ma Playlist";
+
+        // 2. On met à jour les métadonnées (Titre, Artiste)
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: title,
+            artist: author,
+            album: 'Mon Super Site',
+            artwork: [
+                { src: 'https://via.placeholder.com/512', sizes: '512x512', type: 'image/png' }
+                // Idéalement, on récupérerait la miniature YouTube ici, mais c'est plus complexe
+            ]
+        });
+
+        // 3. On connecte les boutons de l'écran de verrouillage aux commandes YouTube
+        navigator.mediaSession.setActionHandler('play', () => player.playVideo());
+        navigator.mediaSession.setActionHandler('pause', () => player.pauseVideo());
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+            if (player && typeof player.nextVideo === 'function') {
+                player.nextVideo();
+            }
+        });
+        // Optionnel : Bouton précédent
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+            if (player && typeof player.previousVideo === 'function') {
+                player.previousVideo();
+            }
+        });
+    }
+}
+
+
 // --- PARTIE 3 : INITIALISATION ---
 
 document.addEventListener('DOMContentLoaded', () => {
