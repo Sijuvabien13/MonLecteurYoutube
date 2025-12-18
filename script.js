@@ -1,4 +1,4 @@
-,// --- PARTIE 1 : GESTION DU MENU (Page d'accueil) ---
+// --- PARTIE 1 : GESTION DU MENU (Page d'accueil) ---
 
 function generatePlaylistButtons() {
     // Note: Pour résoudre vos problèmes de JSON, j'utilise la version texte brut pour le debug
