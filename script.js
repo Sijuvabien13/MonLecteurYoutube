@@ -1,4 +1,4 @@
-// --- PARTIE 1 : GESTION DU MENU (Page d'accueil) ---
+,// --- PARTIE 1 : GESTION DU MENU (Page d'accueil) ---
 
 function generatePlaylistButtons() {
     // Note: Pour résoudre vos problèmes de JSON, j'utilise la version texte brut pour le debug
@@ -57,14 +57,16 @@ function onYouTubeIframeAPIReady() {
         return;
     }
 
-    // Configuration spécifique selon le type
+        // Configuration spécifique selon le type
     let playerConfig = {
         height: '450',
         width: '100%',
         events: {
-            'onReady': onPlayerReady
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange // <--- AJOUT ICI
         }
     };
+
 
     if (type === 'playlist') {
         playerConfig.playerVars = {
@@ -103,6 +105,16 @@ function onPlayerReady(event) {
         event.target.playVideo();
     }
 }
+
+// Fonction appelée quand le lecteur change d'état (Lecture, Pause, Fin...)
+function onPlayerStateChange(event) {
+    // YT.PlayerState.PLAYING vaut 1. 
+    // Si la vidéo est en lecture, on met à jour la notification
+    if (event.data === YT.PlayerState.PLAYING) {
+        updateMediaSession();
+    }
+}
+
 
 // Fonction pour mettre à jour l'écran de verrouillage (Media Session API)
 function updateMediaSession() {
