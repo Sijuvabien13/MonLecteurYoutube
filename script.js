@@ -106,14 +106,15 @@ function onPlayerReady(event) {
     }
 }
 
-// Fonction appelée quand le lecteur change d'état (Lecture, Pause, Fin...)
 function onPlayerStateChange(event) {
-    // YT.PlayerState.PLAYING vaut 1. 
-    // Si la vidéo est en lecture, on met à jour la notification
     if (event.data === YT.PlayerState.PLAYING) {
-        updateMediaSession();
+        // On attend 2 secondes que YouTube stabilise les infos de la playlist
+        setTimeout(() => {
+            updateMediaSession();
+        }, 2000);
     }
 }
+
 
 
 function updateMediaSession() {
