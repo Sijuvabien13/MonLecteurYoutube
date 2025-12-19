@@ -116,12 +116,10 @@ function onPlayerStateChange(event) {
 }
 
 
-// Fonction pour mettre à jour l'écran de verrouillage (Media Session API)
 function updateMediaSession() {
     if ('mediaSession' in navigator && player) {
         const videoData = player.getVideoData();
         
-        // On met à jour l'état de lecture pour dire au système "je joue"
         navigator.mediaSession.playbackState = "playing";
 
         navigator.mediaSession.metadata = new MediaMetadata({
@@ -133,19 +131,28 @@ function updateMediaSession() {
             ]
         });
 
-        // On enregistre les contrôles
-        navigator.mediaSession.setActionHandler('play', () => { player.playVideo(); });
-        navigator.mediaSession.setActionHandler('pause', () => { player.pauseVideo(); });
-        
-        // TRÈS IMPORTANT : Certaines versions de Firefox mobile 
-        // demandent que 'nexttrack' soit défini explicitement pour afficher le bouton ⏭️
+        // --- ACTION HANDLERS ---
+        navigator.mediaSession.setActionHandler('play', () => player.playVideo());
+        navigator.mediaSession.setActionHandler('pause', () => player.pauseVideo());
+
+        // On force les handlers Suivant/Précédent
+        // Sur certains navigateurs, il faut que la fonction ne soit pas vide pour que le bouton s'affiche
         navigator.mediaSession.setActionHandler('nexttrack', () => {
             player.nextVideo();
         });
-
+        
         navigator.mediaSession.setActionHandler('previoustrack', () => {
             player.previousVideo();
         });
+
+        // ASTUCE : On déclare les positions pour "réveiller" les boutons sur Android
+        if (player.getDuration) {
+            navigator.mediaSession.setPositionState({
+                duration: player.getDuration() || 0,
+                playbackRate: player.getPlaybackRate() || 1,
+                position: player.getCurrentTime() || 0
+            });
+        }
     }
 }
 
