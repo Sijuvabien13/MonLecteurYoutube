@@ -119,40 +119,36 @@ function onPlayerStateChange(event) {
 // Fonction pour mettre à jour l'écran de verrouillage (Media Session API)
 function updateMediaSession() {
     if ('mediaSession' in navigator && player) {
+        const videoData = player.getVideoData();
         
-        // 1. On récupère les infos de la vidéo en cours
-        // Note: getVideoData() est une fonction de l'API YouTube
-        const videoData = player.getVideoData(); 
-        const title = videoData ? videoData.title : "Lecture en cours";
-        const author = videoData ? videoData.author : "Ma Playlist";
+        // On met à jour l'état de lecture pour dire au système "je joue"
+        navigator.mediaSession.playbackState = "playing";
 
-        // 2. On met à jour les métadonnées (Titre, Artiste)
         navigator.mediaSession.metadata = new MediaMetadata({
-            title: title,
-            artist: author,
-            album: 'Mon Super Site',
+            title: videoData ? videoData.title : "Ma Musique",
+            artist: videoData ? videoData.author : "YouTube",
+            album: "Mon Lecteur Personnel",
             artwork: [
-                { src: 'https://via.placeholder.com/512', sizes: '512x512', type: 'image/png' }
-                // Idéalement, on récupérerait la miniature YouTube ici, mais c'est plus complexe
+                { src: `https://img.youtube.com/vi/${videoData.video_id}/mqdefault.jpg`, sizes: '320x180', type: 'image/jpeg' }
             ]
         });
 
-        // 3. On connecte les boutons de l'écran de verrouillage aux commandes YouTube
-        navigator.mediaSession.setActionHandler('play', () => player.playVideo());
-        navigator.mediaSession.setActionHandler('pause', () => player.pauseVideo());
+        // On enregistre les contrôles
+        navigator.mediaSession.setActionHandler('play', () => { player.playVideo(); });
+        navigator.mediaSession.setActionHandler('pause', () => { player.pauseVideo(); });
+        
+        // TRÈS IMPORTANT : Certaines versions de Firefox mobile 
+        // demandent que 'nexttrack' soit défini explicitement pour afficher le bouton ⏭️
         navigator.mediaSession.setActionHandler('nexttrack', () => {
-            if (player && typeof player.nextVideo === 'function') {
-                player.nextVideo();
-            }
+            player.nextVideo();
         });
-        // Optionnel : Bouton précédent
+
         navigator.mediaSession.setActionHandler('previoustrack', () => {
-            if (player && typeof player.previousVideo === 'function') {
-                player.previousVideo();
-            }
+            player.previousVideo();
         });
     }
 }
+
 
 
 // --- PARTIE 3 : INITIALISATION ---
